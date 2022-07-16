@@ -22,7 +22,7 @@ if (isset($data['firstname']) && isset($data['lastname']) && isset($data['email'
         $row = $check_email->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
-            echo json_encode(["warning" => "มีอีเมลนี้อยู่ในระบบแล้ว", "exist" => true]);
+            echo json_encode(["warning" => "มีอีเมลนี้มีอยู่ในระบบแล้ว", "exist" => true]);
         } else {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO user(user_firstname, user_lastname, user_email, user_password, user_urole, user_img) 
