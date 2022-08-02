@@ -52,11 +52,13 @@ if (
     $minute = ($data['minute']);
     $amount = ($data['amount']);
     $listTag = ($data['listTag']);
+    $row_like = null;
+
 
     if ($del_recipe_by_id) {
-        // $checkLike = $conn->prepare("SELECT * FROM likes WHERE recipe_id = $del_recipe_by_id");
-        // $checkLike->execute();
-        // $row_like = $checkLike->fetchAll(PDO::FETCH_ASSOC);
+        $checkLike = $conn->prepare("SELECT * FROM likes WHERE recipe_id = $del_recipe_by_id");
+        $checkLike->execute();
+        $row_like = $checkLike->fetchAll(PDO::FETCH_ASSOC);
 
         $del = $conn->prepare("DELETE FROM recipe WHERE recipe_id = $del_recipe_by_id");
         $del->execute();
@@ -91,16 +93,16 @@ if (
     }
 
 
+    if ($row_like) {
+        foreach ($row_like as $like) {
+            $userLike = $like['user_id'];
+            $insert_like = $conn->prepare("INSERT INTO likes(user_id, recipe_id) 
+            VALUES($userLike,  $recipeID)");
+            $insert_like->execute();
+        }
+    }
 
-    // if ($del_recipe_by_id) {
-    //     foreach ($row_like['user_id'] as $user_id) {
-    //         $insert_like = $conn->prepare("INSERT INTO likes(user_id, recipe_id) 
-    //     VALUES($user_id, $del_recipe_by_id)");
-    //         $insert_like->execute();
-    //     }
-    // }
-
-    echo json_encode(["success" => true]);
+    echo json_encode(["success" => true, "hour" =>  $hour]);
 
     try {
     } catch (PDOException $e) {
